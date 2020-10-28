@@ -23,6 +23,9 @@ steps:
   settings:
     dry_run: true
     repo: validate
+  when:
+    event:
+    - pull_request
 
 - name: publish_docker
   image: plugins/docker
@@ -38,5 +41,9 @@ steps:
     event:
     - push
     - tag
+
+trigger:
+  branch:
+  - main
 
 ...
