@@ -8,9 +8,35 @@ platform:
   arch: amd64
 
 steps:
-- name: build
+- name: docker_lint
+  image: hadolint/hadolint:v1.18.0-debian
+  commands:
+  - hadolint - < Dockerfile
+
+- name: build_java
   image: maven:3-jdk-11
   commands:
   - mvn clean verify -B
+
+- name: build_docker
+  image: plugins/docker
+  settings:
+    dry_run: true
+    repo: validate
+
+- name: publish_docker
+  image: plugins/docker
+  settings:
+    auto_tag: true
+    cache_from: ${DRONE_REPO,,}:latest
+    password:
+      from_secret: docker_password
+    repo: ${DRONE_REPO,,}
+    username:
+      from_secret: docker_username
+  when:
+    event:
+    - push
+    - tag
 
 ...
