@@ -39,8 +39,4 @@ steps:
     - push
     - tag
 
-trigger:
-  branch:
-  - master
-
 ...
